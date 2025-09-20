@@ -1,236 +1,318 @@
+<!-- /public/index.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Mi Amor Eterno!!</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <title>Mi Amor Eterno – Para el amor de mi vida</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Una carta y galería dedicada a mi esposa: amor, gratitud y promesas para siempre." />
+  <meta name="theme-color" content="#d6336c" />
   <style>
-    body {
-      margin: 0;
-      font-family: 'Georgia', serif;
-      background: 
-        linear-gradient(to right, rgba(255, 220, 240, 0.7), rgba(235, 200, 255, 0.8)),
-        url('img/baground.png');
-      background-blend-mode: overlay;
-      background-attachment: fixed;
-      background-size: cover;
-      color: #4a2c2a;
+    :root{
+      --bg:#fff7fb; --bg-soft:#fff0f5; --text:#3b2726;
+      --primary:#d6336c; --accent:#6c2c38; --card:#ffffff;
+      --shadow:0 8px 20px rgba(0,0,0,.12); --radius:16px; --maxw:960px;
+    }
+    @media (prefers-color-scheme: dark){
+      :root{ --bg:#1a171a; --bg-soft:#221c22; --text:#f7eef4; --primary:#ff5a8f; --accent:#f2b7c7; --card:#272127; --shadow:0 8px 20px rgba(0,0,0,.35); }
     }
 
-    header {
-      padding: 60px 20px;
-      text-align: center;
-      background: #fff0f5;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+    body{
+      margin:0; font-family: ui-serif, Georgia, "Times New Roman", serif;
+      line-height:1.8; font-size:18px; color:var(--text);
+      background:
+        linear-gradient(to right, rgba(255,220,240,.72), rgba(235,200,255,.82)),
+        url("img/baground.png");
+      background-attachment:fixed; background-size:cover; background-position:center; background-blend-mode:overlay;
+      text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+    }
+    @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation:none!important; transition:none!important;} }
+
+    .skip-link{ position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
+    .skip-link:focus{ position:fixed; left:12px; top:12px; padding:.6rem .9rem; background:var(--primary); color:#fff; border-radius:12px; z-index:999; box-shadow:var(--shadow); }
+
+    header{
+      padding: clamp(40px, 6vw, 72px) 20px; text-align:center;
+      background: color-mix(in oklab, var(--bg-soft) 90%, transparent);
+      box-shadow: 0 4px 10px rgba(0,0,0,.06); backdrop-filter: blur(3px);
+    }
+    header h1{
+      margin:0 0 .4rem; font-size:clamp(2rem,4.5vw,3rem); color:var(--primary); letter-spacing:.4px;
+      text-wrap: balance;
+    }
+    header p{ margin:0; font-size:clamp(1rem,2.5vw,1.2rem); color:var(--accent); }
+
+    main{ padding:32px 20px; }
+    .container{ max-width:var(--maxw); margin-inline:auto; }
+
+    .photo{ text-align:center; margin:24px auto 32px; }
+    .photo figure{ margin:0; }
+    .photo img{
+      width: 280px; max-width:88vw; height:auto;
+      border-radius:20px; box-shadow:0 12px 25px rgba(0,0,0,.16);
+      aspect-ratio: 7 / 9; object-fit: cover;
+    }
+    .tagline{
+      margin-top:.65rem; font-size:1.1rem; font-weight:700;
+      color:var(--primary); letter-spacing:.3px; text-wrap: balance;
     }
 
-    header h1 {
-      font-size: 3em;
-      color: #d6336c;
-      margin-bottom: 10px;
+    .message-block{
+      background: color-mix(in oklab, var(--card) 92%, transparent);
+      border-radius:var(--radius); padding:clamp(18px,3vw,28px); margin:0 auto 22px;
+      box-shadow:var(--shadow); animation:fadeIn .6s ease both;
+    }
+    .message-block h2{
+      color:var(--primary); margin:0 0 .35rem;
+      font-size: clamp(1.25rem, 3.2vw, 1.6rem);
+      text-wrap: balance;
+    }
+    .message-block p{ margin:.5rem 0; font-size:1.06rem; letter-spacing:.2px; }
+
+    .gallery{
+      display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+      gap:16px;
+    }
+    .gallery img{
+      width:100%; height:auto; display:block;
+      border-radius:12px; box-shadow:var(--shadow);
+      aspect-ratio: 4 / 5; object-fit: cover;
     }
 
-    header p {
-      font-size: 1.3em;
-      color: #6c2c38;
-    }
-
-    section {
-      padding: 40px 20px;
-      max-width: 900px;
-      margin: auto;
-    }
-
-    .photo {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .photo img {
-      width: 280px;
+    /* Banner de dedicación notorio */
+    .dedication{
+      margin:24px auto 0; max-width:var(--maxw);
+      background: color-mix(in oklab, var(--bg-soft) 85%, transparent);
+      border:1px solid rgba(0,0,0,.06);
+      box-shadow: var(--shadow);
       border-radius: 20px;
-      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
-      transition: transform 0.3s ease;
+      padding: 16px 18px;
+      display:flex; justify-content:center; align-items:center; gap:.5rem;
+      font-weight:700; font-size: clamp(1.05rem, 2vw, 1.2rem);
+      color: var(--accent);
+      text-align:center;
+    }
+    .dedication .heart{ display:inline-block; }
+    @keyframes beat{ 0%,100%{ transform:scale(1);} 50%{ transform:scale(1.12);} }
+    @media (prefers-reduced-motion: no-preference){
+      .dedication .heart{ animation: beat 1.4s ease-in-out infinite; transform-origin:center; }
     }
 
-    .photo img:hover {
-      transform: scale(1.05);
-    }
+    footer{ text-align:center; padding:22px 16px; background:#ffe3ec10; color:var(--text); }
 
-    .message-block {
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 15px;
-      padding: 30px;
-      margin-bottom: 30px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-      animation: fadeIn 1s ease;
-    }
+    @keyframes fadeIn{ from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
 
-    .message-block h2 {
-      color: #d6336c;
-      margin-bottom: 10px;
-    }
+    a{ color:var(--primary); }
+    strong{ color:var(--primary); }
+    .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 
-    .message-block p {
-      font-size: 1.1em;
-      line-height: 1.6;
+    /* Control de música */
+    .music-ctrl{
+      position: fixed; right:16px; bottom:16px; z-index:1000;
+      display:flex; align-items:center; gap:10px;
+      padding:10px 14px; border-radius:999px; border:1px solid rgba(0,0,0,.08);
+      background: var(--card); box-shadow: var(--shadow);
     }
+    .music-ctrl button{
+      border:none; cursor:pointer; border-radius:999px; padding:8px 12px; font-weight:600;
+    }
+    .music-ctrl .play{ background:var(--primary); color:#fff; }
+    .music-ctrl .mute{ background:transparent; color:var(--accent); }
+    .music-ctrl[hidden]{ display:none; }
 
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 15px;
-    }
-
-    .gallery img {
-      width: 100%;
-      border-radius: 10px;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease;
-    }
-
-    .gallery img:hover {
-      transform: scale(1.03);
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      background: #ffe3ec;
-      color: #4a2c2a;
-    }
-
-    @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(20px);}
-      to {opacity: 1; transform: translateY(0);}
-    }
+    #yt-player{ position:fixed; width:1px; height:1px; left:-9999px; top:-9999px; }
+    #bgmFallback{ display:none; }
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
 
-<header>
-  <h1>Para el Amor de Mi Vida</h1>
-  <p>Una página dedicada a ti, mi reina hermosa ❤️</p>
-</header>
+  <header role="banner">
+    <h1>Para el Amor de Mi Vida</h1>
+    <p>Una página dedicada a ti, mi reina hermosa <span aria-hidden="true">❤️</span><span class="sr-only">corazón rojo</span></p>
+  </header>
 
-<section class="photo">
-  <img src="img/mi-esposa.jpg" alt="Mi Esposa">
-</section>
+  <main id="contenido" class="container" role="main">
+    <section class="photo" aria-labelledby="foto-title">
+      <h2 id="foto-title" class="sr-only">Foto principal</h2>
+      <figure>
+        <img src="img/image2.jpg" alt="Carla sonriendo en nuestro retrato favorito." width="280" height="360" decoding="async" />
+        <figcaption class="tagline">Mi esposita, mi todo.</figcaption>
+      </figure>
+    </section>
 
-<section class="message-block">
-  <h2>Mi compañera incondicional</h2>
-  <p>
-    Desde que llegaste a mi vida, todo cambió para mejor.  
-    Tu presencia es mi refugio, tu voz mi calma, y tu abrazo mi fortaleza.  
-    Contigo aprendí que el amor verdadero no abandona, no duda, no se cansa... solo crece.  
-    Gracias por caminar a mi lado en los días de sol, y aún más, en los de tormenta.
-  </p>
-</section>
+    <section class="message-block" aria-labelledby="compa">
+      <h2 id="compa">Mi compañera incondicional</h2>
+      <p>Desde que llegaste a mi vida, todo cambió para mejor. Tu presencia es mi refugio, tu voz mi calma, y tu abrazo mi fortaleza. Contigo aprendí que el amor verdadero no abandona, no duda, no se cansa… solo crece. Gracias por caminar a mi lado en los días de sol, y aún más, en los de tormenta.</p>
+    </section>
 
-<section class="message-block">
-  <h2>Tu sonrisa ilumina mi mundo</h2>
-  <p>
-    No hay estrella más brillante que tu sonrisa.  
-    Cuando sonríes, el mundo se detiene un segundo solo para admirarte.  
-    Tu alegría no solo ilumina mi día, también le da sentido.  
-    Eres la risa que le faltaba a mi historia.
-  </p>
-</section>
+    <section class="message-block" aria-labelledby="sonrisa">
+      <h2 id="sonrisa">Tu sonrisa ilumina mi mundo</h2>
+      <p>No hay estrella más brillante que tu sonrisa. Cuando sonríes, el mundo se detiene un segundo solo para admirarte. Tu alegría no solo ilumina mi día, también le da sentido. Eres la risa que le faltaba a mi historia.</p>
+    </section>
 
-<section class="message-block">
-  <h2>Trabajadora, fuerte, única</h2>
-  <p>
-    Eres una mujer incansable, que lucha, que sueña, que construye.  
-    Tu fuerza no está solo en tus acciones, sino en tu corazón que nunca se rinde.  
-    Eres única, irrepetible, un regalo que la vida me dio.  
-    Tu dedicación me enseña cada día que el amor también se demuestra con esfuerzo.
-  </p>
-</section>
+    <section class="message-block" aria-labelledby="fuerte">
+      <h2 id="fuerte">Trabajadora, fuerte, única</h2>
+      <p>Eres una mujer incansable, que lucha, que sueña, que construye. Tu fuerza no está solo en tus acciones, sino en tu corazón que nunca se rinde. Eres única, irrepetible, un regalo que la vida me dio. Tu dedicación me enseña cada día que el amor también se demuestra con esfuerzo.</p>
+    </section>
 
-<section class="message-block">
-  <h2>El amor que me sostiene</h2>
-  <p>
-    Tú eres mi equilibrio cuando tambaleo,  
-    mi certeza cuando el mundo se vuelve incierto.  
-    Contigo, nunca estoy solo,  
-    porque hasta en silencio, me sostienes con tu amor.  
-    Eres mi fuerza silenciosa, mi razón constante,  
-    mi hogar en medio del caos.
-  </p>
-</section>
+    <section class="message-block" aria-labelledby="sostiene">
+      <h2 id="sostiene">El amor que me sostiene</h2>
+      <p>Tú eres mi equilibrio cuando tambaleo, mi certeza cuando el mundo se vuelve incierto. Contigo, nunca estoy solo, porque hasta en silencio, me sostienes con tu amor. Eres mi fuerza silenciosa, mi razón constante, mi hogar en medio del caos.</p>
+    </section>
 
-<section class="message-block">
-  <h2>Y juntos cumplimos promesas</h2>
-  <p>
-    Prometí cuidarte, y lo haré hasta mi último aliento.  
-    Prometiste quedarte, y cada día cumples esa promesa con amor.  
-    Contigo, las promesas no son palabras:  
-    son abrazos, son miradas, son actos diarios de amor.  
-    Juntos escribimos una historia digna de recordarse por siempre.
-  </p>
-</section>
+    <section class="message-block" aria-labelledby="promesas">
+      <h2 id="promesas">Y juntos cumplimos promesas</h2>
+      <p>Prometí cuidarte, y lo haré hasta mi último aliento. Prometiste quedarte, y cada día cumples esa promesa con amor. Contigo, las promesas no son palabras: son abrazos, son miradas, son actos diarios de amor. Juntos escribimos una historia digna de recordarse por siempre.</p>
+    </section>
 
-<section class="message-block">
-  <h2>Dios, Tú y Yo</h2>
-  <p>
-    En medio de todo, Dios es nuestro centro.  
-    Él fue quien cruzó nuestros caminos, quien sembró este amor tan puro en nuestros corazones.  
-    Cada oración compartida, cada lágrima entregada en fe, cada sueño confiado a Él...  
-    han fortalecido lo que somos juntos.  
-  </p>
-  <p>
-    Contigo aprendí que el verdadero amor no se busca… se ora.  
-    Y Dios, en su infinita bondad, me respondió contigo.  
-    No somos solo dos: somos <strong>Dios, Tú y Yo</strong>.  
-    Y con Él en medio, nada nos faltará.
-  </p>
-</section>
+    <section class="message-block" aria-labelledby="dios">
+      <h2 id="dios">Dios, Tú y Yo</h2>
+      <p>En medio de todo, Dios es nuestro centro. Él fue quien cruzó nuestros caminos, quien sembró este amor tan puro en nuestros corazones. Cada oración compartida, cada lágrima entregada en fe, cada sueño confiado a Él… han fortalecido lo que somos juntos.</p>
+      <p>Contigo aprendí que el verdadero amor no se busca… se ora. Y Dios, en su infinita bondad, me respondió contigo. No somos solo dos: somos <strong>Dios, Tú y Yo</strong>. Y con Él en medio, nada nos faltará.</p>
+    </section>
 
-<section class="message-block">
-  <h2>Lo que más amo de ti, Carla</h2>
-  <p>
-    Amo tu risa que llena el aire de alegría.  
-    Amo cómo sonríes con el alma y cómo haces brillar mis días.  
-    Amo tu forma de ser feliz sin motivo, porque tu felicidad me vuelve feliz a mí también.  
-    Eres esa energía dulce, pura y luminosa que solo tú puedes tener.
-  </p>
-</section>
+    <section class="message-block" aria-labelledby="amo-de-ti">
+      <h2 id="amo-de-ti">Lo que más amo de ti, Carla</h2>
+      <p>Amo tu risa que llena el aire de alegría. Amo cómo sonríes con el alma y cómo haces brillar mis días. Amo tu forma de ser feliz sin motivo, porque tu felicidad me vuelve feliz a mí también. Eres esa energía dulce, pura y luminosa que solo tú puedes tener.</p>
+    </section>
 
-<section class="message-block">
-  <h2>Tú y yo, un corazón verde y lila</h2>
-  <p>
-    Hay cosas que solo nosotros entendemos.  
-    Como ese corazón verde 💚 que nos representa,  
-    o el color lila que lleva la dulzura de nuestro amor.  
-    Son nuestros símbolos, nuestras marcas, nuestros secretos...  
-    Nuestro amor se expresa incluso en los colores.
-  </p>
-</section>
+    <section class="message-block" aria-labelledby="colores">
+      <h2 id="colores">Tú y yo, un corazón verde y lila</h2>
+      <p>Hay cosas que solo nosotros entendemos. Como ese corazón verde 💚 que nos representa, o el color lila que lleva la dulzura de nuestro amor. Son nuestros símbolos, nuestras marcas, nuestros secretos... Nuestro amor se expresa incluso en los colores.</p>
+    </section>
 
-<section class="message-block">
-  <h2>Mi Carla Guadalupe Vargas Callisaya</h2>
-  <p>
-    Tu nombre es música para mi corazón.  
-    Carla Guadalupe, mi amada, mi compañera, mi destino.  
-    Te llamo “esposita”, “amor”, “corazón”, “cariño”…  
-    porque no hay una sola palabra que alcance para describir lo que eres para mí.  
-    Lo eres todo.
-  </p>
-</section>
+    <section class="message-block" aria-labelledby="nombre-completo">
+      <h2 id="nombre-completo">Mi Carla Guadalupe Vargas Callisaya</h2>
+      <p>Tu nombre es música para mi corazón. Carla Guadalupe, mi amada, mi compañera, mi destino. Te llamo “esposita”, “amor”, “corazón”, “cariño”… porque no hay una sola palabra que alcance para describir lo que eres para mí. Lo eres todo.</p>
+    </section>
 
-<section class="message-block">
-  <h2>Galería de Nuestro Amor 💖</h2>
-  <div class="gallery">
-    <img src="img/recuerdo1.jpg" alt="Recuerdo 1">
-    <img src="img/recuerdo2.jpg" alt="Recuerdo 2">
-    <img src="img/recuerdo3.jpg" alt="Recuerdo 3">
-    <img src="img/recuerdo4.jpg" alt="Recuerdo 4">
+    <section class="message-block" aria-labelledby="galeria">
+      <h2 id="galeria">Galería de Nuestro Amor 💖</h2>
+      <div id="gallery" class="gallery" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <!-- Banner de dedicación notorio -->
+  <div class="dedication" role="note" aria-label="Dedicación final">
+    Hecho con todo mi amor <span class="heart" aria-hidden="true">💞</span> por tu esposo que te adora.
   </div>
-</section>
 
-<footer>
-  Hecho con todo mi amor 💞 por tu esposo que te adora.
-</footer>
+  <footer role="contentinfo"></footer>
 
+  <!-- Audio: YouTube + fallback local -->
+  <div id="yt-player" aria-hidden="true"></div>
+  <audio id="bgmFallback" preload="auto" loop>
+    <source src="audio/royalty-free.ogg" type="audio/ogg" />
+    <source src="audio/royalty-free.mp3" type="audio/mpeg" />
+  </audio>
+
+  <div id="musicCtrl" class="music-ctrl" role="group" aria-label="Control de música" hidden>
+    <button id="btnPlay" class="play" aria-label="Reproducir música">▶️ Reproducir</button>
+    <button id="btnMute" class="mute" aria-label="Silenciar/Activar sonido">🔈</button>
+  </div>
+
+  <script>
+    // Galería 1..54 excluyendo image2
+    (function renderGallery(){
+      const total = 54, exclude = 2;
+      const el = document.getElementById('gallery');
+      const frag = document.createDocumentFragment();
+      for(let i=1;i<=total;i++){
+        if(i===exclude) continue;
+        const img = document.createElement('img');
+        img.src = `img/image${i}.jpg`;
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        img.alt = `Nuestro recuerdo ${i}`;
+        frag.appendChild(img);
+      }
+      el.appendChild(frag);
+    })();
+
+    // Música: YouTube + fallback local
+    const VIDEO_ID = "Mv6GRNec2mc";
+    const ctrl = document.getElementById('musicCtrl');
+    const btnPlay = document.getElementById('btnPlay');
+    const btnMute = document.getElementById('btnMute');
+    const fallback = document.getElementById('bgmFallback');
+
+    let ytReady = false, ytFailed = false, usingFallback = false, ytPlayer;
+
+    (function loadYT(){
+      const s = document.createElement('script');
+      s.src = "https://www.youtube.com/iframe_api";
+      s.onerror = () => { ytFailed = true; useFallback(); };
+      document.head.appendChild(s);
+      ctrl.hidden = false;
+    })();
+
+    window.onYouTubeIframeAPIReady = function(){
+      try{
+        ytPlayer = new YT.Player('yt-player', {
+          height:'1', width:'1', videoId: VIDEO_ID,
+          playerVars:{ autoplay:0, controls:0, disablekb:1, fs:0, modestbranding:1, rel:0, loop:1, playlist:VIDEO_ID, playsinline:1 },
+          events:{ onReady:()=>{ ytReady=true; setupControls(); }, onError:()=>{ ytFailed=true; useFallback(); } }
+        });
+      }catch(e){ ytFailed=true; useFallback(); }
+    };
+
+    function useFallback(){ usingFallback = true; setupControls(); }
+
+    function setupControls(){
+      const pref = localStorage.getItem('bgm:pref'); // 'on'|'off'
+      const mutedPref = localStorage.getItem('bgm:muted') === 'true';
+
+      function play(){
+        if(usingFallback){
+          fallback.muted = mutedPref;
+          fallback.play().catch(()=>{});
+        }else if(ytReady){
+          if(mutedPref) ytPlayer.mute(); else ytPlayer.unMute();
+          ytPlayer.playVideo();
+        }
+        btnPlay.textContent = '⏸️ Pausar';
+        btnPlay.setAttribute('aria-label','Pausar música');
+        localStorage.setItem('bgm:pref','on');
+      }
+
+      function pause(){
+        if(usingFallback){ fallback.pause(); }
+        else if(ytReady){ ytPlayer.pauseVideo(); }
+        btnPlay.textContent = '▶️ Reproducir';
+        btnPlay.setAttribute('aria-label','Reproducir música');
+        localStorage.setItem('bgm:pref','off');
+      }
+
+      function toggleMute(){
+        if(usingFallback){
+          fallback.muted = !fallback.muted;
+          btnMute.textContent = fallback.muted ? '🔇' : '🔈';
+          localStorage.setItem('bgm:muted', String(fallback.muted));
+        }else if(ytReady){
+          if(ytPlayer.isMuted()) ytPlayer.unMute(); else ytPlayer.mute();
+          btnMute.textContent = ytPlayer.isMuted() ? '🔇' : '🔈';
+          localStorage.setItem('bgm:muted', String(ytPlayer.isMuted()));
+        }
+      }
+
+      btnMute.textContent = (mutedPref ? '🔇' : '🔈');
+      if(pref === 'on') play(); else pause();
+
+      btnPlay.onclick = () => {
+        if(usingFallback){ fallback.paused ? play() : pause(); }
+        else if(ytReady){
+          const st = ytPlayer.getPlayerState();
+          (st !== YT.PlayerState.PLAYING) ? play() : pause();
+        }else{
+          if(!usingFallback) useFallback();
+          play();
+        }
+      };
+      btnMute.onclick = toggleMute;
+    }
+  </script>
 </body>
 </html>
