@@ -37,7 +37,10 @@
       background: color-mix(in oklab, var(--bg-soft) 90%, transparent);
       box-shadow: 0 4px 10px rgba(0,0,0,.06); backdrop-filter: blur(3px);
     }
-    header h1{ margin:0 0 .4rem; font-size:clamp(2rem,4.5vw,3rem); color:var(--primary); letter-spacing:.4px; text-wrap:balance; }
+    header h1{
+      margin:0 0 .4rem; font-size:clamp(2rem,4.5vw,3rem); color:var(--primary); letter-spacing:.4px;
+      text-wrap: balance;
+    }
     header p{ margin:0; font-size:clamp(1rem,2.5vw,1.2rem); color:var(--accent); }
 
     main{ padding:32px 20px; }
@@ -50,14 +53,21 @@
       border-radius:20px; box-shadow:0 12px 25px rgba(0,0,0,.16);
       aspect-ratio: 7 / 9; object-fit: cover;
     }
-    .tagline{ margin-top:.65rem; font-size:1.1rem; font-weight:700; color:var(--primary); letter-spacing:.3px; text-wrap:balance; }
+    .tagline{
+      margin-top:.65rem; font-size:1.1rem; font-weight:700;
+      color:var(--primary); letter-spacing:.3px; text-wrap: balance;
+    }
 
     .message-block{
       background: color-mix(in oklab, var(--card) 92%, transparent);
       border-radius:var(--radius); padding:clamp(18px,3vw,28px); margin:0 auto 22px;
       box-shadow:var(--shadow); animation:fadeIn .6s ease both;
     }
-    .message-block h2{ color:var(--primary); margin:0 0 .35rem; font-size: clamp(1.25rem, 3.2vw, 1.6rem); text-wrap:balance; }
+    .message-block h2{
+      color:var(--primary); margin:0 0 .35rem;
+      font-size: clamp(1.25rem, 3.2vw, 1.6rem);
+      text-wrap: balance;
+    }
     .message-block p{ margin:.5rem 0; font-size:1.06rem; letter-spacing:.2px; }
 
     /* ===== Galería ===== */
@@ -136,7 +146,7 @@
       </figure>
     </section>
 
-    <!-- ===== Texto original (restaurado) ===== -->
+    <!-- Mensajes -->
     <section class="message-block"><h2>Mi compañera incondicional</h2><p>Desde que llegaste a mi vida, todo cambió para mejor. Tu presencia es mi refugio, tu voz mi calma, y tu abrazo mi fortaleza. Contigo aprendí que el amor verdadero no abandona, no duda, no se cansa… solo crece. Gracias por caminar a mi lado en los días de sol, y aún más, en los de tormenta.</p></section>
     <section class="message-block"><h2>Tu sonrisa ilumina mi mundo</h2><p>No hay estrella más brillante que tu sonrisa. Cuando sonríes, el mundo se detiene un segundo solo para admirarte. Tu alegría no solo ilumina mi día, también le da sentido. Eres la risa que le faltaba a mi historia.</p></section>
     <section class="message-block"><h2>Trabajadora, fuerte, única</h2><p>Eres una mujer incansable, que lucha, que sueña, que construye. Tu fuerza no está solo en tus acciones, sino en tu corazón que nunca se rinde. Eres única, irrepetible, un regalo que la vida me dio. Tu dedicación me enseña cada día que el amor también se demuestra con esfuerzo.</p></section>
@@ -147,7 +157,7 @@
     <section class="message-block"><h2>Tú y yo, un corazón verde y lila</h2><p>Hay cosas que solo nosotros entendemos. Como ese corazón verde 💚 que nos representa, o el color lila que lleva la dulzura de nuestro amor. Son nuestros símbolos, nuestras marcas, nuestros secretos... Nuestro amor se expresa incluso en los colores.</p></section>
     <section class="message-block"><h2>Mi Carla Guadalupe Vargas Callisaya</h2><p>Tu nombre es música para mi corazón. Carla Guadalupe, mi amada, mi compañera, mi destino. Te llamo “esposita”, “amor”, “corazón”, “cariño”… porque no hay una sola palabra que alcance para describir lo que eres para mí. Lo eres todo.</p></section>
 
-    <!-- Galería sin nombres ni captions -->
+    <!-- Galería -->
     <section class="message-block" aria-labelledby="galeria">
       <h2 id="galeria">Galería de Nuestro Amor 💖</h2>
       <div id="gallery" class="gallery" aria-live="polite"></div>
@@ -172,7 +182,7 @@
     <button id="btnMute" class="mute" aria-label="Silenciar/Activar sonido">🔈</button>
   </div>
 
-  <!-- Lightbox sin captions/descarga -->
+  <!-- Lightbox -->
   <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Visor de fotos" oncontextmenu="return false">
     <button class="btn close" id="lbClose" aria-label="Cerrar">✕</button>
     <div class="nav">
@@ -183,73 +193,87 @@
   </div>
 
   <script>
-    /* ===== Galería (sin captions) ===== */
+    /* ===== Galería robusta: ignora archivos eliminados ===== */
     (function gallery(){
-      const TOTAL = 52, EXCLUDE = 2;
+      const MAX = 54;                 // máximo esperado
+      const EXCLUDE = new Set([2]);   // no duplicar la foto principal
       const container = document.getElementById('gallery');
-      const items = [];
       const frag = document.createDocumentFragment();
 
-      for(let i=1;i<=TOTAL;i++){
-        if(i===EXCLUDE) continue;
+      for (let i = 1; i <= MAX; i++) {
+        if (EXCLUDE.has(i)) continue;
         const img = document.createElement('img');
-        img.setAttribute('data-src', `img/image${i}.jpg`);
-        img.alt = ""; // sin texto adicional
+        const src = `img/image${i}.jpg`;
+        img.setAttribute('data-src', src);
+        img.alt = "";
         img.loading = 'lazy';
         img.decoding = 'async';
         img.draggable = false;
+
+        // Carga perezosa + eliminación si falta el archivo
+        img.addEventListener('error', () => {
+          // Si la imagen no existe (404), la removemos del DOM sin afectar el layout
+          img.remove();
+        }, { once: true });
+
         frag.appendChild(img);
-        items.push(`img/image${i}.jpg`);
       }
       container.appendChild(frag);
 
-      const io = new IntersectionObserver((entries, obs)=>{
-        entries.forEach(e=>{
-          if(!e.isIntersecting) return;
+      // IntersectionObserver para asignar src real
+      const io = new IntersectionObserver((entries, obs) => {
+        entries.forEach(e => {
+          if (!e.isIntersecting) return;
           const el = e.target, src = el.getAttribute('data-src');
-          if(src){ el.src = src; el.removeAttribute('data-src'); }
+          if (src) { el.src = src; el.removeAttribute('data-src'); }
           obs.unobserve(el);
         });
-      }, {rootMargin:'200px 0px'});
-      container.querySelectorAll('img[data-src]').forEach(img=>io.observe(img));
+      }, { rootMargin: '200px 0px' });
+      container.querySelectorAll('img[data-src]').forEach(img => io.observe(img));
 
-      // Lightbox
+      /* Lightbox: obtiene la lista de imágenes válidas en el momento del clic */
       const lb = document.getElementById('lightbox');
       const lbImg = document.getElementById('lbImg');
       const lbClose = document.getElementById('lbClose');
       const lbPrev = document.getElementById('lbPrev');
       const lbNext = document.getElementById('lbNext');
 
-      let idx = 0, open = false, startX = 0, deltaX = 0, lastFocus = null;
+      let open = false, idx = 0, lastFocus = null;
 
+      function currentImgs(){
+        return Array.from(container.querySelectorAll('img[src]')); // solo las que cargaron bien
+      }
       function show(i){
-        idx = (i + items.length) % items.length;
-        lbImg.src = items[idx];
+        const imgs = currentImgs();
+        if (!imgs.length) return;
+        idx = (i + imgs.length) % imgs.length;
+        lbImg.src = imgs[idx].src;
       }
       function openLB(i, trigger){
         lastFocus = trigger || document.activeElement;
         show(i);
         lb.classList.add('open');
-        lb.setAttribute('aria-hidden','false');
+        lb.setAttribute('aria-hidden', 'false');
         lbClose.focus();
         open = true;
         document.body.style.overflow = 'hidden';
       }
       function closeLB(){
         lb.classList.remove('open');
-        lb.setAttribute('aria-hidden','true');
+        lb.setAttribute('aria-hidden', 'true');
         open = false;
         document.body.style.overflow = '';
-        if(lastFocus) lastFocus.focus();
+        if (lastFocus) lastFocus.focus();
       }
-      function next(){ show(idx+1); }
-      function prev(){ show(idx-1); }
+      function next(){ show(idx + 1); }
+      function prev(){ show(idx - 1); }
 
-      container.addEventListener('click', (e)=>{
-        const imgs = [...container.querySelectorAll('img')];
+      container.addEventListener('click', (e) => {
+        const imgs = currentImgs();
         const target = e.target.closest('img');
-        if(!target) return;
-        openLB(imgs.indexOf(target), target);
+        if (!target) return;
+        const i = imgs.indexOf(target);
+        if (i >= 0) openLB(i, target);
       });
 
       lbClose.addEventListener('click', closeLB);
@@ -257,21 +281,29 @@
       lbPrev.addEventListener('click', prev);
       lbImg.addEventListener('click', closeLB);
 
-      document.addEventListener('keydown', (e)=>{
-        if(!open) return;
-        if(e.key === 'Escape') closeLB();
-        else if(e.key === 'ArrowRight') next();
-        else if(e.key === 'ArrowLeft') prev();
+      document.addEventListener('keydown', (e) => {
+        if (!open) return;
+        if (e.key === 'Escape') closeLB();
+        else if (e.key === 'ArrowRight') next();
+        else if (e.key === 'ArrowLeft') prev();
+
         const focusables = [lbClose, lbPrev, lbNext];
-        if(e.key === 'Tab'){ e.preventDefault(); const cur=document.activeElement; const i=(focusables.indexOf(cur)+(e.shiftKey?-1:1)+focusables.length)%focusables.length; focusables[i].focus(); }
+        if (e.key === 'Tab') {
+          e.preventDefault();
+          const cur = document.activeElement;
+          const i = (focusables.indexOf(cur) + (e.shiftKey ? -1 : 1) + focusables.length) % focusables.length;
+          focusables[i].focus();
+        }
       });
 
-      lb.addEventListener('touchstart', (e)=>{ startX=e.touches[0].clientX; deltaX=0; }, {passive:true});
-      lb.addEventListener('touchmove', (e)=>{ deltaX=e.touches[0].clientX - startX; }, {passive:true});
-      lb.addEventListener('touchend', ()=>{ if(Math.abs(deltaX)>40){ deltaX<0?next():prev(); } startX=0; deltaX=0; });
+      // Gestos táctiles
+      let startX = 0, deltaX = 0;
+      lb.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; deltaX = 0; }, { passive: true });
+      lb.addEventListener('touchmove', (e) => { deltaX = e.touches[0].clientX - startX; }, { passive: true });
+      lb.addEventListener('touchend', () => { if (Math.abs(deltaX) > 40) (deltaX < 0 ? next() : prev()); startX = 0; deltaX = 0; });
     })();
 
-    /* ===== Música: YouTube + fallback local ===== */
+    /* ===== Música: inicia siempre en pausa (YouTube + fallback) ===== */
     (function music(){
       const VIDEO_ID = "Mv6GRNec2mc";
       const ctrl = document.getElementById('musicCtrl');
@@ -299,25 +331,43 @@
       function useFallback(){ usingFallback=true; setupControls(); }
 
       function setupControls(){
-        const pref = localStorage.getItem('bgm:pref');
         const mutedPref = localStorage.getItem('bgm:muted') === 'true';
 
+        // Estado inicial forzado en pausa
+        btnPlay.textContent = '▶️ Reproducir';
+        btnPlay.setAttribute('aria-label','Reproducir música');
+        localStorage.setItem('bgm:pref','off');
+
+        // Aplicar mute preferido sin reproducir
+        if(usingFallback){ fallback.muted = mutedPref; }
+        else if(ytReady){ if(mutedPref) ytPlayer.mute(); else ytPlayer.unMute(); }
+        btnMute.textContent = mutedPref ? '🔇' : '🔈';
+
         function play(){
-          if(usingFallback){ fallback.muted = mutedPref; fallback.play().catch(()=>{}); }
-          else if(ytReady){ if(mutedPref) ytPlayer.mute(); else ytPlayer.unMute(); ytPlayer.playVideo(); }
-          btnPlay.textContent = '⏸️ Pausar'; btnPlay.setAttribute('aria-label','Pausar música'); localStorage.setItem('bgm:pref','on');
+          if(usingFallback){ fallback.play().catch(()=>{}); }
+          else if(ytReady){ ytPlayer.playVideo(); }
+          btnPlay.textContent = '⏸️ Pausar';
+          btnPlay.setAttribute('aria-label','Pausar música');
+          localStorage.setItem('bgm:pref','on');
         }
         function pause(){
-          if(usingFallback){ fallback.pause(); } else if(ytReady){ ytPlayer.pauseVideo(); }
-          btnPlay.textContent = '▶️ Reproducir'; btnPlay.setAttribute('aria-label','Reproducir música'); localStorage.setItem('bgm:pref','off');
+          if(usingFallback){ fallback.pause(); }
+          else if(ytReady){ ytPlayer.pauseVideo(); }
+          btnPlay.textContent = '▶️ Reproducir';
+          btnPlay.setAttribute('aria-label','Reproducir música');
+          localStorage.setItem('bgm:pref','off');
         }
         function toggleMute(){
-          if(usingFallback){ fallback.muted = !fallback.muted; btnMute.textContent = fallback.muted?'🔇':'🔈'; localStorage.setItem('bgm:muted', String(fallback.muted)); }
-          else if(ytReady){ if(ytPlayer.isMuted()) ytPlayer.unMute(); else ytPlayer.mute(); btnMute.textContent = ytPlayer.isMuted()?'🔇':'🔈'; localStorage.setItem('bgm:muted', String(ytPlayer.isMuted())); }
+          if(usingFallback){
+            fallback.muted = !fallback.muted;
+            btnMute.textContent = fallback.muted ? '🔇' : '🔈';
+            localStorage.setItem('bgm:muted', String(fallback.muted));
+          }else if(ytReady){
+            if(ytPlayer.isMuted()) ytPlayer.unMute(); else ytPlayer.mute();
+            btnMute.textContent = ytPlayer.isMuted() ? '🔇' : '🔈';
+            localStorage.setItem('bgm:muted', String(ytPlayer.isMuted()));
+          }
         }
-
-        btnMute.textContent = (mutedPref ? '🔇' : '🔈');
-        if(pref === 'on') play(); else pause();
 
         btnPlay.onclick = () => {
           if(usingFallback){ fallback.paused ? play() : pause(); }
