@@ -81,7 +81,6 @@
       aspect-ratio: 4 / 5; object-fit: cover;
     }
 
-    /* Banner de dedicación notorio */
     .dedication{
       margin:24px auto 0; max-width:var(--maxw);
       background: color-mix(in oklab, var(--bg-soft) 85%, transparent);
@@ -108,7 +107,6 @@
     strong{ color:var(--primary); }
     .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 
-    /* Control de música */
     .music-ctrl{
       position: fixed; right:16px; bottom:16px; z-index:1000;
       display:flex; align-items:center; gap:10px;
@@ -195,28 +193,28 @@
     </section>
   </main>
 
-  <!-- Banner de dedicación notorio -->
   <div class="dedication" role="note" aria-label="Dedicación final">
     Hecho con todo mi amor <span class="heart" aria-hidden="true">💞</span> por tu esposo que te adora.
   </div>
 
   <footer role="contentinfo"></footer>
 
-  <!-- Audio: YouTube + fallback local -->
+  <!-- YouTube + fallback local (si falla) -->
   <div id="yt-player" aria-hidden="true"></div>
   <audio id="bgmFallback" preload="auto" loop>
     <source src="audio/royalty-free.ogg" type="audio/ogg" />
     <source src="audio/royalty-free.mp3" type="audio/mpeg" />
   </audio>
 
+  <!-- Control -->
   <div id="musicCtrl" class="music-ctrl" role="group" aria-label="Control de música" hidden>
     <button id="btnPlay" class="play" aria-label="Reproducir música">▶️ Reproducir</button>
     <button id="btnMute" class="mute" aria-label="Silenciar/Activar sonido">🔈</button>
   </div>
 
   <script>
-    // Galería 1..54 excluyendo image2
-    (function renderGallery(){
+    // Galería 1..54 (excluye image2.jpg)
+    (function(){
       const total = 54, exclude = 2;
       const el = document.getElementById('gallery');
       const frag = document.createDocumentFragment();
@@ -232,7 +230,7 @@
       el.appendChild(frag);
     })();
 
-    // Música: YouTube + fallback local
+    // Música: YouTube + fallback (si YT no carga). Siempre inicia PAUSADO.
     const VIDEO_ID = "Mv6GRNec2mc";
     const ctrl = document.getElementById('musicCtrl');
     const btnPlay = document.getElementById('btnPlay');
@@ -262,15 +260,25 @@
     function useFallback(){ usingFallback = true; setupControls(); }
 
     function setupControls(){
-      const pref = localStorage.getItem('bgm:pref'); // 'on'|'off'
       const mutedPref = localStorage.getItem('bgm:muted') === 'true';
+
+      // Estado inicial SIEMPRE pausado (no reproducir al inicio)
+      localStorage.setItem('bgm:pref','off');
+      btnPlay.textContent = '▶️ Reproducir';
+      btnPlay.setAttribute('aria-label','Reproducir música');
+
+      // Aplicar silencio preferido sin iniciar reproducción
+      if(usingFallback){
+        fallback.muted = mutedPref;
+      }else if(ytReady){
+        if(mutedPref) ytPlayer.mute(); else ytPlayer.unMute();
+      }
+      btnMute.textContent = mutedPref ? '🔇' : '🔈';
 
       function play(){
         if(usingFallback){
-          fallback.muted = mutedPref;
           fallback.play().catch(()=>{});
         }else if(ytReady){
-          if(mutedPref) ytPlayer.mute(); else ytPlayer.unMute();
           ytPlayer.playVideo();
         }
         btnPlay.textContent = '⏸️ Pausar';
@@ -297,9 +305,6 @@
           localStorage.setItem('bgm:muted', String(ytPlayer.isMuted()));
         }
       }
-
-      btnMute.textContent = (mutedPref ? '🔇' : '🔈');
-      if(pref === 'on') play(); else pause();
 
       btnPlay.onclick = () => {
         if(usingFallback){ fallback.paused ? play() : pause(); }
